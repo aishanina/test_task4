@@ -1,0 +1,79 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
+<div id="chessdesk"></div>
+
+<script>
+// создаем шахматное поле размером 8x8:
+// в основе - таблица (table), состоящая из ячеек (cell)
+CreateTable();
+function CreateTable(){
+	var desk = document.getElementById('chessdesk');
+	table = document.createElement('table');
+  desk.appendChild(table);
+  table.border = '1';
+
+  for (var i = 0; i < 8; i++){
+  	var row = table.insertRow(i);
+		for(var j = 0; j < 8; j++){                   
+    	var cell = row.insertCell(j);  
+      
+      // после создания ячейки, присваиваем ей номер (idStr - id ячейки) и раскрашиваем
+      // в соответствие с цветами шахматной доски
+      var idStr = i + ""+ j;      
+      cell.style.height = '20px';
+      cell.style.width = '20px';      
+      cell.id = idStr;
+      if ((i+j)%2!=0) {
+      	cell.style.backgroundColor = "black";
+      } else {
+      	cell.style.backgroundColor = "white";
+      } 
+      cell.onclick = activate;
+		}
+	}  
+}
+// функция cleanColor - возвращает первоначальную раскраску шахматной доски после
+// прошлого выбора активной ячейки и возможных вариантов ходов,
+// вызывается из функции activate
+function cleanColor(){ 
+  for (var i = 0; i < 8; i++){
+    for(var j = 0; j < 8; j++){
+      if ((i+j)%2!=0) {
+          document.getElementById(i+""+j).style.backgroundColor = "black";
+      } else {
+          document.getElementById(i+""+j).style.backgroundColor = "white";
+      }
+    }
+  }
+}
+// функция activate - подсвечивает возможные ходы для выбранной ячейки
+function activate(e){  
+  cleanColor();
+  var selectedCell = e.target.id;
+  e.target.style.backgroundColor = "blue"; //синяя - выбранная ячейка
+  var xplace = selectedCell[0];
+  var yplace = selectedCell[1];
+  var i, newx, newy;
+  
+  // horizontal и vertical - массивы со значениями отклонений от позиции, 
+  // указанной пользователем, для совершения хода конем  
+  var horizontal = ["2","1","-1","-2","-2","-1","1","2"];
+  var vertical = ["-1","-2","-2","-1","1","2","2","1"];
+
+  // проверяем клетки шахматной доски на возможный ход и подсвечивает нужную ячейку
+  for (i = 0; i < horizontal.length; i++) {        		 
+    newx = parseInt(horizontal[i]) + parseInt(xplace);
+    newy = parseInt(vertical[i]) + parseInt(yplace);
+    if (newx >= 0 & newy >= 0 & newx < 8 & newy < 8) {
+    	document.getElementById(newx + "" + newy).style.backgroundColor = "green"; //возможные ходы
+    }
+  }
+}
+</script>
+
+</body> 
+</html>
